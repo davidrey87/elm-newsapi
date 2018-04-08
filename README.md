@@ -2,7 +2,7 @@
 
 Programa de ELM que consume el API de https://newsapi.org/
 
-## Getting Started
+## Empezar
 
 Clonar el repositorio:
 
