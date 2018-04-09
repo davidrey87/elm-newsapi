@@ -46,11 +46,11 @@ decodeContent =
 elementsDecoder : Decoder ArticleResult
 elementsDecoder =
     decode ArticleResult
-        |> optional "title" Json.Decode.string "(The image is not present)"
-        |> optional "description" Json.Decode.string "(The image is not present)"
-        |> optional "url" Json.Decode.string "(The image is not present)"
-        |> optional "urlToImage" Json.Decode.string "(The image is not present)"
-        |> optional "publishedAt" Json.Decode.string "(The date is not present)"
+        |> optional "title" Json.Decode.string "(The Title is not present)"
+        |> optional "description" Json.Decode.string "(The Description is not present)"
+        |> optional "url" Json.Decode.string "(The URL is not present)"
+        |> optional "urlToImage" Json.Decode.string "(The Image is not present)"
+        |> optional "publishedAt" Json.Decode.string "(The Date is not present)"
  
 {-
 MODEL
