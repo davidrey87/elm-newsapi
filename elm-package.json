@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
-    "summary": "helpful summary of your project, less than 80 characters",
-    "repository": "https://github.com/user/project.git",
+    "summary": "Elm para Newsapi.org",
+    "repository": "https://github.com/davidrey87/elm-newsapi.git",
     "license": "BSD3",
     "source-directories": [
         "."

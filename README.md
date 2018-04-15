@@ -10,6 +10,11 @@ Clonar el repositorio:
 git clone https://github.com/davidrey87/elm-newsapi.git
 cd elm-newsapi
 ```
+Correr programa:
+
+```bash
+elm-live Main.elm --open --output=elm.js
+```
 
 ## Obtener Key
 
