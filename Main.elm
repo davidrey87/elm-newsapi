@@ -225,7 +225,7 @@ viewArticles result =
         [ h1 [class "display-10"] [ text result.title ]
         , p [class "lead"] [ text result.description ]
         , p [][ text result.publishedAt]
-        , img [ class "img-thumbnail", src (result.urlToImage),  alt (result.description) ] []
+        , img [ class "img-thumbnail", src (result.urlToImage)] []
         , p [class "lead"][
             a [ class "btn btn-primary btn-lg", href (result.url), target "_blank"]
             [ text "Learn more" ]]
