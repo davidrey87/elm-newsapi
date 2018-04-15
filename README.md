@@ -3,6 +3,9 @@
 Programa de ELM que consume el API de https://newsapi.org/
 
 ## Empezar
+Instalar Elm:
+
+https://guide.elm-lang.org/install.html
 
 Clonar el repositorio:
 
