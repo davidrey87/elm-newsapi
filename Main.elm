@@ -10,29 +10,30 @@ import Json.Decode.Pipeline exposing (..)
 import Bootstrap.CDN as CDN
 import Bootstrap.Grid as Grid
 import Bootstrap.Button as Button
+import Select
 
 {-
-program
+Program
 -}
 
 main : Program Never Model Msg
 main =
     Html.program
-        { init = (initialModel, getArticle initialModel.category)
+        { init = (initialModel, getArticle initialModel)
         , update = update
         , view = view
         , subscriptions = always Sub.none
         }
 
 
-getArticle : Category -> Cmd Msg
-getArticle category =
+getArticle : Model -> Cmd Msg
+getArticle model =
     let
         url =
             "https://newsapi.org/v2/"
             ++ "top-headlines"
-            ++ "?country=us"
-            ++ "&category=" ++ String.toLower(toString category)
+            ++ "?country=" ++ String.toLower(toString model.country)
+            ++ "&category=" ++ String.toLower(toString model.category)
             ++ "&apiKey=" ++ Use.key
 
         request = Http.get url decodeContent
@@ -58,9 +59,9 @@ MODEL
 
 type alias Model =
     { currentArticles : List ArticleResult,
-      category : Category
+      category : Category,
+      country : Country
     }
-
 
 type alias ArticleResult =
     { title : String
@@ -70,17 +71,6 @@ type alias ArticleResult =
     , publishedAt : String
     }
 
-initialModel : Model
-initialModel =
-    { currentArticles = []
-    , category = Science
-    }
-
-
-{-
-message
--}
-
 type Category
     = Science
     | Technology
@@ -89,9 +79,31 @@ type Category
     | General
     | Health
 
+type Country
+    = Us
+    | Mx
+    | Br
+    | Gr
+    | Ru
+    | Ch
+    | Fr
+
+{-
+Message
+-}
+
+initialModel : Model
+initialModel =
+    { currentArticles = []
+    , category = Science
+    , country = Us
+    }
+
 type Msg
     = GotArticle (Result Http.Error (List ArticleResult))
     | SetCategory Category
+    | SetCountry Country
+    | ButtonUpdate
     | NoOp
 
 {-
@@ -117,23 +129,42 @@ update msg model =
                     ( { model | currentArticles = currentArticles }, Cmd.none )
         
         SetCategory newCategory ->
-            ( model, getArticle newCategory)
+            ({ model | category = newCategory}, Cmd.none)
+
+        SetCountry newCountry ->
+            ({ model | country = newCountry}, Cmd.none)
+
+        ButtonUpdate ->
+            ( model, getArticle model)
+
 {-
 VIEW
 -}
 
+
 view : Model -> Html Msg
 view model =
     Grid.container [ class "text-center jumbotron" ]
-        -- Responsive fixed width container
-        [ CDN.stylesheet -- Inlined Bootstrap CSS for use with reactor
+        [ CDN.stylesheet
         , mainContent model
         ]
         
-mainContent : { a | currentArticles : List ArticleResult, category : Category} -> Html Msg
+mainContent : { a | currentArticles : List ArticleResult, category : Category, country : Country} -> Html Msg
 mainContent model =
     div []
-        [ p [] [ h1 [] [ text "News" ], h5 [] [ text "The lastest news:" ] ]
+        [ p [] [ h1 [ class "text-primary" ] [ text "News" ] ]
+        ,div [ class "text-info" ]
+            [ text ("Selected Country: " ++ toString model.country)
+            , br [] []
+            , text ("Selected Category: " ++ toString model.category)
+            , br [] []
+            , br [] []
+            ]
+        ,div []
+            [ Select.from [ Us, Mx, Gr, Br, Ru, Ch, Fr ] SetCountry
+            , br [] []
+            , br [] []
+            ]
         ,div []
             [ Button.button
                 [ Button.outlinePrimary
@@ -165,6 +196,19 @@ mainContent model =
                 , Button.attrs [ onClick (SetCategory Health) ]
                 ]
                 [ text "Healthl" ]
+            , br [] []
+            , br [] []
+            ]
+        ,div []
+            [ Button.button
+                [ Button.outlinePrimary
+                , Button.attrs [ onClick (ButtonUpdate) ]
+                ]
+                [ text "Update" ]
+            , br [] []
+            , br [] []
+            , h5 [] [ text "The lastest news:" ] 
+
             ]
         , div [] (List.map viewArticles model.currentArticles)
         , div [ class "text-right small" ]
@@ -187,4 +231,3 @@ viewArticles result =
             [ text "Learn more" ]]
         , hr [class "my-4"][]
         ]
-
